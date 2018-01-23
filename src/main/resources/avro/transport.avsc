@@ -1,9 +1,0 @@
-{"namespace": "Protocol",
- "type": "record",
- "name": "DownlinkFrame",
- "fields": [
-     {"name": "id", "type": "int"},
-     {"name": "TimeStampField", "type": "long", "logicalType": "timestamp-millis"}]}
-     {"name" : "ccc", "type" : { "type" : "array", "items": "bytes" } 
- ]
-}

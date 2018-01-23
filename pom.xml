@@ -19,7 +19,6 @@
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 	<maven.compiler.source>1.8</maven.compiler.source>
   	<maven.compiler.target>1.8</maven.compiler.target>
-    <!--maven.compiler>3.7</maven.compiler-->
     <avro.version>1.8.2</avro.version>
   </properties>
 
@@ -38,20 +37,6 @@
 
   <build>
     <plugins>
-    
-      <!--plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler}</version>
-        <configuration>
-          <source>${jdkLevel}</source>
-          <target>${jdkLevel}</target>
-          <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
-          <outputDirectory>${project.basedir}/src/main/java/Protocol/</outputDirectory>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-        </configuration>
-      </plugin-->
       
       <plugin>
         <groupId>org.apache.avro</groupId>

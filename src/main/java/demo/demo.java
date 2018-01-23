@@ -27,7 +27,7 @@ public class demo
 		try {
 			//System.out.println(getClass().getResourceAsStream("/avro/transport.avsc"));
 			//Schema schema=Schema.parse(getClass().getResourceAsStream("Pair.avsc"));
-			Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/avro/transport.avsc"));
+			Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/avro/DownlinkFrame.avsc"));
 			
 			//System.out.println(schema);
 			File file = new File("users.avro");
