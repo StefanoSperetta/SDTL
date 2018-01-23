@@ -12,7 +12,7 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
 
-import Protocol.DownlinkFrame;
+import SDTL.Protocol.DownlinkFrame;
 import SDTL.FileOperations.FileWriter;
 
 public class demo 

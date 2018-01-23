@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package Protocol;
+package SDTL.Protocol;
 
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.message.BinaryMessageEncoder;
@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -5460804531615251872L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"Protocol\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"TimeStampField\",\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}]}");
+  private static final long serialVersionUID = 731608571770129807L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"TimeStampField\",\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -127,8 +127,8 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
    * Creates a new DownlinkFrame RecordBuilder.
    * @return A new DownlinkFrame RecordBuilder
    */
-  public static Protocol.DownlinkFrame.Builder newBuilder() {
-    return new Protocol.DownlinkFrame.Builder();
+  public static SDTL.Protocol.DownlinkFrame.Builder newBuilder() {
+    return new SDTL.Protocol.DownlinkFrame.Builder();
   }
 
   /**
@@ -136,8 +136,8 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
    * @param other The existing builder to copy.
    * @return A new DownlinkFrame RecordBuilder
    */
-  public static Protocol.DownlinkFrame.Builder newBuilder(Protocol.DownlinkFrame.Builder other) {
-    return new Protocol.DownlinkFrame.Builder(other);
+  public static SDTL.Protocol.DownlinkFrame.Builder newBuilder(SDTL.Protocol.DownlinkFrame.Builder other) {
+    return new SDTL.Protocol.DownlinkFrame.Builder(other);
   }
 
   /**
@@ -145,8 +145,8 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
    * @param other The existing instance to copy.
    * @return A new DownlinkFrame RecordBuilder
    */
-  public static Protocol.DownlinkFrame.Builder newBuilder(Protocol.DownlinkFrame other) {
-    return new Protocol.DownlinkFrame.Builder(other);
+  public static SDTL.Protocol.DownlinkFrame.Builder newBuilder(SDTL.Protocol.DownlinkFrame other) {
+    return new SDTL.Protocol.DownlinkFrame.Builder(other);
   }
 
   /**
@@ -167,7 +167,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(Protocol.DownlinkFrame.Builder other) {
+    private Builder(SDTL.Protocol.DownlinkFrame.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.id)) {
         this.id = data().deepCopy(fields()[0].schema(), other.id);
@@ -183,7 +183,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
      * Creates a Builder by copying an existing DownlinkFrame instance
      * @param other The existing instance to copy.
      */
-    private Builder(Protocol.DownlinkFrame other) {
+    private Builder(SDTL.Protocol.DownlinkFrame other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.id)) {
         this.id = data().deepCopy(fields()[0].schema(), other.id);
@@ -208,7 +208,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @param value The value of 'id'.
       * @return This builder.
       */
-    public Protocol.DownlinkFrame.Builder setId(int value) {
+    public SDTL.Protocol.DownlinkFrame.Builder setId(int value) {
       validate(fields()[0], value);
       this.id = value;
       fieldSetFlags()[0] = true;
@@ -228,7 +228,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * Clears the value of the 'id' field.
       * @return This builder.
       */
-    public Protocol.DownlinkFrame.Builder clearId() {
+    public SDTL.Protocol.DownlinkFrame.Builder clearId() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -246,7 +246,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @param value The value of 'TimeStampField'.
       * @return This builder.
       */
-    public Protocol.DownlinkFrame.Builder setTimeStampField(long value) {
+    public SDTL.Protocol.DownlinkFrame.Builder setTimeStampField(long value) {
       validate(fields()[1], value);
       this.TimeStampField = value;
       fieldSetFlags()[1] = true;
@@ -266,7 +266,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * Clears the value of the 'TimeStampField' field.
       * @return This builder.
       */
-    public Protocol.DownlinkFrame.Builder clearTimeStampField() {
+    public SDTL.Protocol.DownlinkFrame.Builder clearTimeStampField() {
       fieldSetFlags()[1] = false;
       return this;
     }
