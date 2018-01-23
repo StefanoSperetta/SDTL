@@ -11,9 +11,9 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.parsing.Parser;
 
 import Protocol.DownlinkFrame;
+import SDTL.FileOperations.FileWriter;
 
 public class demo 
 {
@@ -27,8 +27,9 @@ public class demo
 		try {
 			//System.out.println(getClass().getResourceAsStream("/avro/transport.avsc"));
 			//Schema schema=Schema.parse(getClass().getResourceAsStream("Pair.avsc"));
-			Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/avro/DownlinkFrame.avsc"));
-			
+			//Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("/avro/DownlinkFrame.avsc"));
+			Schema schema = DownlinkFrame.SCHEMA$;
+				
 			//System.out.println(schema);
 			File file = new File("users.avro");
 			
@@ -70,6 +71,33 @@ public class demo
 	
 	public static void main(String[] args)
 	{
-		new demo();
+		//new demo();
+		try 
+		{
+			DownlinkFrame f = new DownlinkFrame();
+			f.put("id", 100);
+			DownlinkFrame f1 = new DownlinkFrame();
+			f1.put("id", 101);
+			DownlinkFrame f2 = new DownlinkFrame();
+			f2.put("id", 102);
+			FileWriter<DownlinkFrame> fw = new FileWriter<DownlinkFrame>(DownlinkFrame.SCHEMA$, "frames.avro");
+			fw.append(f);
+			fw.append(f1);
+			fw.append(f2);
+			fw.close();
+			
+		} catch (IllegalArgumentException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
