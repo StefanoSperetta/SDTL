@@ -15,9 +15,6 @@ import org.apache.avro.io.DatumWriter;
  */
 public class FileWriter<T>
 {
-	private final Schema schema;
-	private final String filename;
-	private final File file;
 	private final DataFileWriter<T> dataFileWriter;
 	
 	/** Function constructor
@@ -28,12 +25,9 @@ public class FileWriter<T>
 	 */
 	public FileWriter(Schema schema, String filename) throws NullPointerException, IOException
 	{
-		this.schema = schema;
-		System.out.println(schema);
-		this.filename = filename;
-		file = new File(this.filename);
+		File file = new File(filename);
 		
-		DatumWriter<T> datumWriter = new GenericDatumWriter<T>(this.schema);
+		DatumWriter<T> datumWriter = new GenericDatumWriter<T>(schema);
 	    dataFileWriter = new DataFileWriter<T>(datumWriter);
 	    dataFileWriter.create(schema, file);
 	}
