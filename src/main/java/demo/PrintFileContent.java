@@ -14,18 +14,18 @@ public class PrintFileContent
 	{
 		try 
 		{
+			int index = 0;
 			FileReader<DownlinkFrame> reader = new FileReader<DownlinkFrame>(DownlinkFrame.SCHEMA$, "frames.avro");
 			DownlinkFrame frame = new DownlinkFrame();
 			while (reader.hasNext()) 
 		    {
 		      reader.next(frame);
-		      
-		      int d = frame.getId();
+		      System.out.print(index++ + ": " + frame.hashCode() + " ");
 		      Calendar calendar = Calendar.getInstance();
 		      calendar.setTimeInMillis(frame.getTimestamp());
 		      ByteBuffer data = frame.getData();
 		      
-		      System.out.print(d + ", " + calendar.getTime() + ", ");
+		      System.out.print(calendar.getTime() + ", ");
 		      while (data.hasRemaining())
 		          System.out.print(String.format("%02X ", data.get()));
 		      System.out.println();
