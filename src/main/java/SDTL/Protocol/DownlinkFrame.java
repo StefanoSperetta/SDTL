@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8443820188677524070L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":\"bytes\"}]}");
+  private static final long serialVersionUID = 4536358997181961296L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":\"bytes\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -51,7 +51,6 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
     return DECODER.decode(b);
   }
 
-  @Deprecated public int id;
   @Deprecated public long timestamp;
   @Deprecated public java.nio.ByteBuffer data;
 
@@ -64,12 +63,10 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
 
   /**
    * All-args constructor.
-   * @param id The new value for id
    * @param timestamp The new value for timestamp
    * @param data The new value for data
    */
-  public DownlinkFrame(java.lang.Integer id, java.lang.Long timestamp, java.nio.ByteBuffer data) {
-    this.id = id;
+  public DownlinkFrame(java.lang.Long timestamp, java.nio.ByteBuffer data) {
     this.timestamp = timestamp;
     this.data = data;
   }
@@ -78,9 +75,8 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   // Used by DatumWriter.  Applications should not call.
   public java.lang.Object get(int field$) {
     switch (field$) {
-    case 0: return id;
-    case 1: return timestamp;
-    case 2: return data;
+    case 0: return timestamp;
+    case 1: return data;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -89,27 +85,10 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: id = (java.lang.Integer)value$; break;
-    case 1: timestamp = (java.lang.Long)value$; break;
-    case 2: data = (java.nio.ByteBuffer)value$; break;
+    case 0: timestamp = (java.lang.Long)value$; break;
+    case 1: data = (java.nio.ByteBuffer)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
-  }
-
-  /**
-   * Gets the value of the 'id' field.
-   * @return The value of the 'id' field.
-   */
-  public java.lang.Integer getId() {
-    return id;
-  }
-
-  /**
-   * Sets the value of the 'id' field.
-   * @param value the value to set.
-   */
-  public void setId(java.lang.Integer value) {
-    this.id = value;
   }
 
   /**
@@ -176,7 +155,6 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<DownlinkFrame>
     implements org.apache.avro.data.RecordBuilder<DownlinkFrame> {
 
-    private int id;
     private long timestamp;
     private java.nio.ByteBuffer data;
 
@@ -191,17 +169,13 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
      */
     private Builder(SDTL.Protocol.DownlinkFrame.Builder other) {
       super(other);
-      if (isValidValue(fields()[0], other.id)) {
-        this.id = data().deepCopy(fields()[0].schema(), other.id);
+      if (isValidValue(fields()[0], other.timestamp)) {
+        this.timestamp = data().deepCopy(fields()[0].schema(), other.timestamp);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
+      if (isValidValue(fields()[1], other.data)) {
+        this.data = data().deepCopy(fields()[1].schema(), other.data);
         fieldSetFlags()[1] = true;
-      }
-      if (isValidValue(fields()[2], other.data)) {
-        this.data = data().deepCopy(fields()[2].schema(), other.data);
-        fieldSetFlags()[2] = true;
       }
     }
 
@@ -211,56 +185,14 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
      */
     private Builder(SDTL.Protocol.DownlinkFrame other) {
             super(SCHEMA$);
-      if (isValidValue(fields()[0], other.id)) {
-        this.id = data().deepCopy(fields()[0].schema(), other.id);
+      if (isValidValue(fields()[0], other.timestamp)) {
+        this.timestamp = data().deepCopy(fields()[0].schema(), other.timestamp);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
+      if (isValidValue(fields()[1], other.data)) {
+        this.data = data().deepCopy(fields()[1].schema(), other.data);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.data)) {
-        this.data = data().deepCopy(fields()[2].schema(), other.data);
-        fieldSetFlags()[2] = true;
-      }
-    }
-
-    /**
-      * Gets the value of the 'id' field.
-      * @return The value.
-      */
-    public java.lang.Integer getId() {
-      return id;
-    }
-
-    /**
-      * Sets the value of the 'id' field.
-      * @param value The value of 'id'.
-      * @return This builder.
-      */
-    public SDTL.Protocol.DownlinkFrame.Builder setId(int value) {
-      validate(fields()[0], value);
-      this.id = value;
-      fieldSetFlags()[0] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'id' field has been set.
-      * @return True if the 'id' field has been set, false otherwise.
-      */
-    public boolean hasId() {
-      return fieldSetFlags()[0];
-    }
-
-
-    /**
-      * Clears the value of the 'id' field.
-      * @return This builder.
-      */
-    public SDTL.Protocol.DownlinkFrame.Builder clearId() {
-      fieldSetFlags()[0] = false;
-      return this;
     }
 
     /**
@@ -277,9 +209,9 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public SDTL.Protocol.DownlinkFrame.Builder setTimestamp(long value) {
-      validate(fields()[1], value);
+      validate(fields()[0], value);
       this.timestamp = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[0] = true;
       return this;
     }
 
@@ -288,7 +220,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'timestamp' field has been set, false otherwise.
       */
     public boolean hasTimestamp() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[0];
     }
 
 
@@ -297,7 +229,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public SDTL.Protocol.DownlinkFrame.Builder clearTimestamp() {
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[0] = false;
       return this;
     }
 
@@ -315,9 +247,9 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public SDTL.Protocol.DownlinkFrame.Builder setData(java.nio.ByteBuffer value) {
-      validate(fields()[2], value);
+      validate(fields()[1], value);
       this.data = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -326,7 +258,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'data' field has been set, false otherwise.
       */
     public boolean hasData() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[1];
     }
 
 
@@ -336,7 +268,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       */
     public SDTL.Protocol.DownlinkFrame.Builder clearData() {
       data = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -345,9 +277,8 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
     public DownlinkFrame build() {
       try {
         DownlinkFrame record = new DownlinkFrame();
-        record.id = fieldSetFlags()[0] ? this.id : (java.lang.Integer) defaultValue(fields()[0]);
-        record.timestamp = fieldSetFlags()[1] ? this.timestamp : (java.lang.Long) defaultValue(fields()[1]);
-        record.data = fieldSetFlags()[2] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[2]);
+        record.timestamp = fieldSetFlags()[0] ? this.timestamp : (java.lang.Long) defaultValue(fields()[0]);
+        record.data = fieldSetFlags()[1] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[1]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

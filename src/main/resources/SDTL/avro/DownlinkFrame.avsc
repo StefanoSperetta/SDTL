@@ -2,7 +2,6 @@
  "type": "record",
  "name": "DownlinkFrame",
  "fields": [
-     {"name": "id", "type": "int"},
      {"name": "timestamp", "type": "long"},
      {"name": "data", "type": "bytes" }
  ]
