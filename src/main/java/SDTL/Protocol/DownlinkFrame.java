@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4536358997181961296L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":\"bytes\"}]}");
+  private static final long serialVersionUID = 8685517639866190845L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":\"bytes\"},{\"name\":\"gs\",\"type\":\"string\",\"default\":\"\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -53,6 +53,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
 
   @Deprecated public long timestamp;
   @Deprecated public java.nio.ByteBuffer data;
+  @Deprecated public java.lang.CharSequence gs;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -65,10 +66,12 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
    * All-args constructor.
    * @param timestamp The new value for timestamp
    * @param data The new value for data
+   * @param gs The new value for gs
    */
-  public DownlinkFrame(java.lang.Long timestamp, java.nio.ByteBuffer data) {
+  public DownlinkFrame(java.lang.Long timestamp, java.nio.ByteBuffer data, java.lang.CharSequence gs) {
     this.timestamp = timestamp;
     this.data = data;
+    this.gs = gs;
   }
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
@@ -77,6 +80,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
     switch (field$) {
     case 0: return timestamp;
     case 1: return data;
+    case 2: return gs;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -87,6 +91,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
     switch (field$) {
     case 0: timestamp = (java.lang.Long)value$; break;
     case 1: data = (java.nio.ByteBuffer)value$; break;
+    case 2: gs = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -124,6 +129,22 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   }
 
   /**
+   * Gets the value of the 'gs' field.
+   * @return The value of the 'gs' field.
+   */
+  public java.lang.CharSequence getGs() {
+    return gs;
+  }
+
+  /**
+   * Sets the value of the 'gs' field.
+   * @param value the value to set.
+   */
+  public void setGs(java.lang.CharSequence value) {
+    this.gs = value;
+  }
+
+  /**
    * Creates a new DownlinkFrame RecordBuilder.
    * @return A new DownlinkFrame RecordBuilder
    */
@@ -157,6 +178,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
 
     private long timestamp;
     private java.nio.ByteBuffer data;
+    private java.lang.CharSequence gs;
 
     /** Creates a new Builder */
     private Builder() {
@@ -177,6 +199,10 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
         this.data = data().deepCopy(fields()[1].schema(), other.data);
         fieldSetFlags()[1] = true;
       }
+      if (isValidValue(fields()[2], other.gs)) {
+        this.gs = data().deepCopy(fields()[2].schema(), other.gs);
+        fieldSetFlags()[2] = true;
+      }
     }
 
     /**
@@ -192,6 +218,10 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       if (isValidValue(fields()[1], other.data)) {
         this.data = data().deepCopy(fields()[1].schema(), other.data);
         fieldSetFlags()[1] = true;
+      }
+      if (isValidValue(fields()[2], other.gs)) {
+        this.gs = data().deepCopy(fields()[2].schema(), other.gs);
+        fieldSetFlags()[2] = true;
       }
     }
 
@@ -272,6 +302,45 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       return this;
     }
 
+    /**
+      * Gets the value of the 'gs' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getGs() {
+      return gs;
+    }
+
+    /**
+      * Sets the value of the 'gs' field.
+      * @param value The value of 'gs'.
+      * @return This builder.
+      */
+    public SDTL.Protocol.DownlinkFrame.Builder setGs(java.lang.CharSequence value) {
+      validate(fields()[2], value);
+      this.gs = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'gs' field has been set.
+      * @return True if the 'gs' field has been set, false otherwise.
+      */
+    public boolean hasGs() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'gs' field.
+      * @return This builder.
+      */
+    public SDTL.Protocol.DownlinkFrame.Builder clearGs() {
+      gs = null;
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public DownlinkFrame build() {
@@ -279,6 +348,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
         DownlinkFrame record = new DownlinkFrame();
         record.timestamp = fieldSetFlags()[0] ? this.timestamp : (java.lang.Long) defaultValue(fields()[0]);
         record.data = fieldSetFlags()[1] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[1]);
+        record.gs = fieldSetFlags()[2] ? this.gs : (java.lang.CharSequence) defaultValue(fields()[2]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

@@ -73,6 +73,7 @@ public class ImportPyTrack
 			    		DownlinkFrame f0 = DownlinkFrame.newBuilder()
 		    				.setTimestamp(result.getTime())
 		    				.setData(data)
+		    				.setGs("delfiground_primary")
 		    				.build();
 			    		
 			    		fw.append(f0);

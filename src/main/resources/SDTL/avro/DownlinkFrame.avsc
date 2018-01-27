@@ -3,6 +3,7 @@
  "name": "DownlinkFrame",
  "fields": [
      {"name": "timestamp", "type": "long"},
-     {"name": "data", "type": "bytes" }
+     {"name": "data", "type": "bytes" },
+     {"name": "gs", "type": "string", "default": ""}
  ]
 }
