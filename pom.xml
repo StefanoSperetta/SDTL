@@ -70,7 +70,7 @@
 					<transformers>
 						<transformer implementation=
 						  "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-							<mainClass>demo.demo</mainClass>
+							<mainClass>demo.ImportPyTrack</mainClass>
 					</transformer>
 				</transformers>
 			</configuration>
@@ -92,13 +92,13 @@
   		<groupId>org.apache.logging.log4j</groupId>
   		<artifactId>log4j-core</artifactId>
   		<version>2.10.0</version>
-  		<scope>runtime</scope>
+  		<scope>compile</scope>
   	</dependency>
   	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-log4j12</artifactId>
 		<version>1.7.25</version>
-		<scope>runtime</scope>
+		<scope>compile</scope>
 </dependency>
   </dependencies>
   
