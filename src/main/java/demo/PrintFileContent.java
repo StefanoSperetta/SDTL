@@ -28,36 +28,44 @@ import SDTL.Protocol.DownlinkFrame;
 
 public class PrintFileContent 
 {
-	public static void main(String[] args)
-	{
-		try 
-		{
-			int index = 0;
-			FileReader<DownlinkFrame> reader = new FileReader<DownlinkFrame>(DownlinkFrame.SCHEMA$, "frames.avro");
-			DownlinkFrame frame = new DownlinkFrame();
-			while (reader.hasNext()) 
-		    {
-		      reader.next(frame);
-		      System.out.print(index++ + ": " + frame.hashCode() + " ");
-		      Calendar calendar = Calendar.getInstance();
-		      calendar.setTimeInMillis(frame.getTimestamp());
-		      ByteBuffer data = frame.getData();
-		      
-		      System.out.print(calendar.getTime() + ", ");
-		      while (data.hasRemaining())
-		          System.out.print(String.format("%02X ", data.get()));
-		      System.out.println();
-		    }
-			reader.close();
-		    
-		} catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchElementException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public static void main(String[] args)
+    {
+        try 
+        {
+            int index = 0;
+            FileReader<DownlinkFrame> reader = new FileReader<DownlinkFrame>(DownlinkFrame.SCHEMA$, "frames.avro");
+            DownlinkFrame frame = new DownlinkFrame();
+            while (reader.hasNext()) 
+            {
+                reader.next(frame);
+                System.out.print(String.format("%5d: ", index++));
+                Calendar ReceptionTime = Calendar.getInstance();
+                ReceptionTime.setTimeInMillis(frame.getReceptionTime());
+                Calendar ClientSubmissionTime = Calendar.getInstance();
+                ClientSubmissionTime.setTimeInMillis(frame.getClientSubmissionTime());
+                Calendar ServerReceptionTime = Calendar.getInstance();
+                ServerReceptionTime.setTimeInMillis(frame.getServerReceptionTime());
+                ByteBuffer data = frame.getData();
+
+                System.out.print(ReceptionTime.getTime() + ", ");
+                System.out.print(ClientSubmissionTime.getTime() + ", ");
+                System.out.print(ServerReceptionTime.getTime() + ", ");
+                while (data.hasRemaining())
+                {
+                    System.out.print(String.format("%02X ", data.get()));
+                }
+                System.out.println();
+            }
+            reader.close();
+
+        } catch (IOException e) 
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchElementException e) 
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

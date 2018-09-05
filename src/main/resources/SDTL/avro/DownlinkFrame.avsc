@@ -2,7 +2,9 @@
  "type": "record",
  "name": "DownlinkFrame",
  "fields": [
-     {"name": "timestamp", "type": "long"},
+     {"name": "receptionTime", "type": "long"},
+     {"name": "clientSubmissionTime", "type": "long"},
+     {"name": "serverReceptionTime", "type": "long"},
      {"name": "data", "type": "bytes" },
      {"name": "gs", "type": "string", "default": ""}
  ]

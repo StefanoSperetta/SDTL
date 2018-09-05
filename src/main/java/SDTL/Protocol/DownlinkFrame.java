@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8685517639866190845L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"data\",\"type\":\"bytes\"},{\"name\":\"gs\",\"type\":\"string\",\"default\":\"\"}]}");
+  private static final long serialVersionUID = 1736189753850810163L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DownlinkFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"receptionTime\",\"type\":\"long\"},{\"name\":\"clientSubmissionTime\",\"type\":\"long\"},{\"name\":\"serverReceptionTime\",\"type\":\"long\"},{\"name\":\"data\",\"type\":\"bytes\"},{\"name\":\"gs\",\"type\":\"string\",\"default\":\"\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -51,7 +51,9 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
     return DECODER.decode(b);
   }
 
-  @Deprecated public long timestamp;
+  @Deprecated public long receptionTime;
+  @Deprecated public long clientSubmissionTime;
+  @Deprecated public long serverReceptionTime;
   @Deprecated public java.nio.ByteBuffer data;
   @Deprecated public java.lang.CharSequence gs;
 
@@ -64,12 +66,16 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
 
   /**
    * All-args constructor.
-   * @param timestamp The new value for timestamp
+   * @param receptionTime The new value for receptionTime
+   * @param clientSubmissionTime The new value for clientSubmissionTime
+   * @param serverReceptionTime The new value for serverReceptionTime
    * @param data The new value for data
    * @param gs The new value for gs
    */
-  public DownlinkFrame(java.lang.Long timestamp, java.nio.ByteBuffer data, java.lang.CharSequence gs) {
-    this.timestamp = timestamp;
+  public DownlinkFrame(java.lang.Long receptionTime, java.lang.Long clientSubmissionTime, java.lang.Long serverReceptionTime, java.nio.ByteBuffer data, java.lang.CharSequence gs) {
+    this.receptionTime = receptionTime;
+    this.clientSubmissionTime = clientSubmissionTime;
+    this.serverReceptionTime = serverReceptionTime;
     this.data = data;
     this.gs = gs;
   }
@@ -78,9 +84,11 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   // Used by DatumWriter.  Applications should not call.
   public java.lang.Object get(int field$) {
     switch (field$) {
-    case 0: return timestamp;
-    case 1: return data;
-    case 2: return gs;
+    case 0: return receptionTime;
+    case 1: return clientSubmissionTime;
+    case 2: return serverReceptionTime;
+    case 3: return data;
+    case 4: return gs;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -89,27 +97,61 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: timestamp = (java.lang.Long)value$; break;
-    case 1: data = (java.nio.ByteBuffer)value$; break;
-    case 2: gs = (java.lang.CharSequence)value$; break;
+    case 0: receptionTime = (java.lang.Long)value$; break;
+    case 1: clientSubmissionTime = (java.lang.Long)value$; break;
+    case 2: serverReceptionTime = (java.lang.Long)value$; break;
+    case 3: data = (java.nio.ByteBuffer)value$; break;
+    case 4: gs = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
 
   /**
-   * Gets the value of the 'timestamp' field.
-   * @return The value of the 'timestamp' field.
+   * Gets the value of the 'receptionTime' field.
+   * @return The value of the 'receptionTime' field.
    */
-  public java.lang.Long getTimestamp() {
-    return timestamp;
+  public java.lang.Long getReceptionTime() {
+    return receptionTime;
   }
 
   /**
-   * Sets the value of the 'timestamp' field.
+   * Sets the value of the 'receptionTime' field.
    * @param value the value to set.
    */
-  public void setTimestamp(java.lang.Long value) {
-    this.timestamp = value;
+  public void setReceptionTime(java.lang.Long value) {
+    this.receptionTime = value;
+  }
+
+  /**
+   * Gets the value of the 'clientSubmissionTime' field.
+   * @return The value of the 'clientSubmissionTime' field.
+   */
+  public java.lang.Long getClientSubmissionTime() {
+    return clientSubmissionTime;
+  }
+
+  /**
+   * Sets the value of the 'clientSubmissionTime' field.
+   * @param value the value to set.
+   */
+  public void setClientSubmissionTime(java.lang.Long value) {
+    this.clientSubmissionTime = value;
+  }
+
+  /**
+   * Gets the value of the 'serverReceptionTime' field.
+   * @return The value of the 'serverReceptionTime' field.
+   */
+  public java.lang.Long getServerReceptionTime() {
+    return serverReceptionTime;
+  }
+
+  /**
+   * Sets the value of the 'serverReceptionTime' field.
+   * @param value the value to set.
+   */
+  public void setServerReceptionTime(java.lang.Long value) {
+    this.serverReceptionTime = value;
   }
 
   /**
@@ -176,7 +218,9 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<DownlinkFrame>
     implements org.apache.avro.data.RecordBuilder<DownlinkFrame> {
 
-    private long timestamp;
+    private long receptionTime;
+    private long clientSubmissionTime;
+    private long serverReceptionTime;
     private java.nio.ByteBuffer data;
     private java.lang.CharSequence gs;
 
@@ -191,17 +235,25 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
      */
     private Builder(SDTL.Protocol.DownlinkFrame.Builder other) {
       super(other);
-      if (isValidValue(fields()[0], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[0].schema(), other.timestamp);
+      if (isValidValue(fields()[0], other.receptionTime)) {
+        this.receptionTime = data().deepCopy(fields()[0].schema(), other.receptionTime);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.data)) {
-        this.data = data().deepCopy(fields()[1].schema(), other.data);
+      if (isValidValue(fields()[1], other.clientSubmissionTime)) {
+        this.clientSubmissionTime = data().deepCopy(fields()[1].schema(), other.clientSubmissionTime);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.gs)) {
-        this.gs = data().deepCopy(fields()[2].schema(), other.gs);
+      if (isValidValue(fields()[2], other.serverReceptionTime)) {
+        this.serverReceptionTime = data().deepCopy(fields()[2].schema(), other.serverReceptionTime);
         fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.data)) {
+        this.data = data().deepCopy(fields()[3].schema(), other.data);
+        fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.gs)) {
+        this.gs = data().deepCopy(fields()[4].schema(), other.gs);
+        fieldSetFlags()[4] = true;
       }
     }
 
@@ -211,55 +263,139 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
      */
     private Builder(SDTL.Protocol.DownlinkFrame other) {
             super(SCHEMA$);
-      if (isValidValue(fields()[0], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[0].schema(), other.timestamp);
+      if (isValidValue(fields()[0], other.receptionTime)) {
+        this.receptionTime = data().deepCopy(fields()[0].schema(), other.receptionTime);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.data)) {
-        this.data = data().deepCopy(fields()[1].schema(), other.data);
+      if (isValidValue(fields()[1], other.clientSubmissionTime)) {
+        this.clientSubmissionTime = data().deepCopy(fields()[1].schema(), other.clientSubmissionTime);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.gs)) {
-        this.gs = data().deepCopy(fields()[2].schema(), other.gs);
+      if (isValidValue(fields()[2], other.serverReceptionTime)) {
+        this.serverReceptionTime = data().deepCopy(fields()[2].schema(), other.serverReceptionTime);
         fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.data)) {
+        this.data = data().deepCopy(fields()[3].schema(), other.data);
+        fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.gs)) {
+        this.gs = data().deepCopy(fields()[4].schema(), other.gs);
+        fieldSetFlags()[4] = true;
       }
     }
 
     /**
-      * Gets the value of the 'timestamp' field.
+      * Gets the value of the 'receptionTime' field.
       * @return The value.
       */
-    public java.lang.Long getTimestamp() {
-      return timestamp;
+    public java.lang.Long getReceptionTime() {
+      return receptionTime;
     }
 
     /**
-      * Sets the value of the 'timestamp' field.
-      * @param value The value of 'timestamp'.
+      * Sets the value of the 'receptionTime' field.
+      * @param value The value of 'receptionTime'.
       * @return This builder.
       */
-    public SDTL.Protocol.DownlinkFrame.Builder setTimestamp(long value) {
+    public SDTL.Protocol.DownlinkFrame.Builder setReceptionTime(long value) {
       validate(fields()[0], value);
-      this.timestamp = value;
+      this.receptionTime = value;
       fieldSetFlags()[0] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'timestamp' field has been set.
-      * @return True if the 'timestamp' field has been set, false otherwise.
+      * Checks whether the 'receptionTime' field has been set.
+      * @return True if the 'receptionTime' field has been set, false otherwise.
       */
-    public boolean hasTimestamp() {
+    public boolean hasReceptionTime() {
       return fieldSetFlags()[0];
     }
 
 
     /**
-      * Clears the value of the 'timestamp' field.
+      * Clears the value of the 'receptionTime' field.
       * @return This builder.
       */
-    public SDTL.Protocol.DownlinkFrame.Builder clearTimestamp() {
+    public SDTL.Protocol.DownlinkFrame.Builder clearReceptionTime() {
       fieldSetFlags()[0] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'clientSubmissionTime' field.
+      * @return The value.
+      */
+    public java.lang.Long getClientSubmissionTime() {
+      return clientSubmissionTime;
+    }
+
+    /**
+      * Sets the value of the 'clientSubmissionTime' field.
+      * @param value The value of 'clientSubmissionTime'.
+      * @return This builder.
+      */
+    public SDTL.Protocol.DownlinkFrame.Builder setClientSubmissionTime(long value) {
+      validate(fields()[1], value);
+      this.clientSubmissionTime = value;
+      fieldSetFlags()[1] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'clientSubmissionTime' field has been set.
+      * @return True if the 'clientSubmissionTime' field has been set, false otherwise.
+      */
+    public boolean hasClientSubmissionTime() {
+      return fieldSetFlags()[1];
+    }
+
+
+    /**
+      * Clears the value of the 'clientSubmissionTime' field.
+      * @return This builder.
+      */
+    public SDTL.Protocol.DownlinkFrame.Builder clearClientSubmissionTime() {
+      fieldSetFlags()[1] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'serverReceptionTime' field.
+      * @return The value.
+      */
+    public java.lang.Long getServerReceptionTime() {
+      return serverReceptionTime;
+    }
+
+    /**
+      * Sets the value of the 'serverReceptionTime' field.
+      * @param value The value of 'serverReceptionTime'.
+      * @return This builder.
+      */
+    public SDTL.Protocol.DownlinkFrame.Builder setServerReceptionTime(long value) {
+      validate(fields()[2], value);
+      this.serverReceptionTime = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'serverReceptionTime' field has been set.
+      * @return True if the 'serverReceptionTime' field has been set, false otherwise.
+      */
+    public boolean hasServerReceptionTime() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'serverReceptionTime' field.
+      * @return This builder.
+      */
+    public SDTL.Protocol.DownlinkFrame.Builder clearServerReceptionTime() {
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -277,9 +413,9 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public SDTL.Protocol.DownlinkFrame.Builder setData(java.nio.ByteBuffer value) {
-      validate(fields()[1], value);
+      validate(fields()[3], value);
       this.data = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -288,7 +424,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'data' field has been set, false otherwise.
       */
     public boolean hasData() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[3];
     }
 
 
@@ -298,7 +434,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       */
     public SDTL.Protocol.DownlinkFrame.Builder clearData() {
       data = null;
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -316,9 +452,9 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public SDTL.Protocol.DownlinkFrame.Builder setGs(java.lang.CharSequence value) {
-      validate(fields()[2], value);
+      validate(fields()[4], value);
       this.gs = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -327,7 +463,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'gs' field has been set, false otherwise.
       */
     public boolean hasGs() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[4];
     }
 
 
@@ -337,7 +473,7 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
       */
     public SDTL.Protocol.DownlinkFrame.Builder clearGs() {
       gs = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -346,9 +482,11 @@ public class DownlinkFrame extends org.apache.avro.specific.SpecificRecordBase i
     public DownlinkFrame build() {
       try {
         DownlinkFrame record = new DownlinkFrame();
-        record.timestamp = fieldSetFlags()[0] ? this.timestamp : (java.lang.Long) defaultValue(fields()[0]);
-        record.data = fieldSetFlags()[1] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[1]);
-        record.gs = fieldSetFlags()[2] ? this.gs : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.receptionTime = fieldSetFlags()[0] ? this.receptionTime : (java.lang.Long) defaultValue(fields()[0]);
+        record.clientSubmissionTime = fieldSetFlags()[1] ? this.clientSubmissionTime : (java.lang.Long) defaultValue(fields()[1]);
+        record.serverReceptionTime = fieldSetFlags()[2] ? this.serverReceptionTime : (java.lang.Long) defaultValue(fields()[2]);
+        record.data = fieldSetFlags()[3] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[3]);
+        record.gs = fieldSetFlags()[4] ? this.gs : (java.lang.CharSequence) defaultValue(fields()[4]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
