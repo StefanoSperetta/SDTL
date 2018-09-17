@@ -37,7 +37,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import SDTL.FileOperations.FileWriter;
+import SDTL.FileOperations.SDTLFileWriter;
 import SDTL.Protocol.DownlinkFrame;
 
 public class ImportPyTrack 
@@ -52,15 +52,15 @@ public class ImportPyTrack
         List<Path> directory = new ArrayList<Path>();
 
         int counter = 0;
-        FileWriter<DownlinkFrame> fw = new FileWriter<DownlinkFrame>(DownlinkFrame.SCHEMA$, "frames.avro");
+        SDTLFileWriter fw = new SDTLFileWriter("frames.avro");
 
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(Paths.get(p.getParent().toString()), p.getFileName().toString()))
         {
                 //dirStream.forEach(path -> System.out.println(path));
-                dirStream.forEach(directory::add);
+                //dirStream.forEach(directory::add);
         }
 
-        directory.sort(Comparator.comparing(Path::toString));
+        //directory.sort(Comparator.comparing(Path::toString));
 
         int files = 1;
         for (Path entry : directory)

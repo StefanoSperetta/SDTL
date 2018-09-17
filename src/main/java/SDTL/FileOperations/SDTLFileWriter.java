@@ -1,35 +1,33 @@
 package SDTL.FileOperations;
 
+import SDTL.Protocol.DownlinkFrame;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.io.DatumWriter;
+import org.apache.avro.specific.SpecificDatumWriter;
 
 /**
  * @author Stefano Speretta <s.speretta@tudelft.nl>
  *
- * @param <T> Generic class type used to initialize the internal methods
  */
-public class FileWriter<T>
+public class SDTLFileWriter
 {
-    private final DataFileWriter<T> dataFileWriter;
+    private final DataFileWriter<DownlinkFrame> dataFileWriter;
 
     /** Function constructor
-     * @param schema schema needed to save data to file
      * @param filename file name to create with path
      * @throws NullPointerException	thrown with null filename
      * @throws IOException thrown when file creation fails
      */
-    public FileWriter(Schema schema, String filename) throws NullPointerException, IOException
+    public SDTLFileWriter(String filename) throws NullPointerException, IOException
     {
         File file = new File(filename);
 
-        DatumWriter<T> datumWriter = new GenericDatumWriter<>(schema);
+        DatumWriter<DownlinkFrame> datumWriter = new SpecificDatumWriter<>(DownlinkFrame.class);
         dataFileWriter = new DataFileWriter<>(datumWriter);
-        dataFileWriter.create(schema, file);
+        dataFileWriter.create(DownlinkFrame.SCHEMA$, file);
     }
 
     /** Close the file
@@ -44,7 +42,7 @@ public class FileWriter<T>
      * @param record record to append
      * @throws IOException thrown upon file error
      */
-    public void append(T record) throws IOException
+    public void append(DownlinkFrame record) throws IOException
     {
         dataFileWriter.append(record);
     }

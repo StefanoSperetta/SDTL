@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.NoSuchElementException;
 
-import SDTL.FileOperations.FileReader;
+import SDTL.FileOperations.SDTLFileReader;
 import SDTL.Protocol.DownlinkFrame;
 
 public class PrintFileContent 
@@ -33,7 +33,7 @@ public class PrintFileContent
         try 
         {
             int index = 0;
-            FileReader<DownlinkFrame> reader = new FileReader<DownlinkFrame>(DownlinkFrame.SCHEMA$, "frames.avro");
+            SDTLFileReader reader = new SDTLFileReader("frames.avro");
             DownlinkFrame frame = new DownlinkFrame();
             while (reader.hasNext()) 
             {
