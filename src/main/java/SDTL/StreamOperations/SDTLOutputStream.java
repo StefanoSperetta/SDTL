@@ -16,7 +16,7 @@
  */
 package SDTL.StreamOperations;
 
-import SDTL.Protocol.DownlinkFrame;
+import SDTL.Protocol.TransportFrame;
 import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.avro.io.BinaryEncoder;
@@ -30,17 +30,17 @@ import org.apache.avro.specific.SpecificDatumWriter;
  */
 public class SDTLOutputStream
 {
-    private final DatumWriter<DownlinkFrame> datumWriter;
+    private final DatumWriter<TransportFrame> datumWriter;
     private final BinaryEncoder binaryEncoder;
     
     public SDTLOutputStream(OutputStream os)
     {
-        datumWriter = new SpecificDatumWriter<>(DownlinkFrame.class);
+        datumWriter = new SpecificDatumWriter<>(TransportFrame.class);
         EncoderFactory enc = new EncoderFactory();
         binaryEncoder = enc.binaryEncoder(os, null);
     }
     
-    public void write(DownlinkFrame record) throws IOException
+    public void write(TransportFrame record) throws IOException
     {
         datumWriter.write(record, binaryEncoder);
     }

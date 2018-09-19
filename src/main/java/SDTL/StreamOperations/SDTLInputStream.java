@@ -16,7 +16,7 @@
  */
 package SDTL.StreamOperations;
 
-import SDTL.Protocol.DownlinkFrame;
+import SDTL.Protocol.TransportFrame;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.avro.io.BinaryDecoder;
@@ -30,18 +30,18 @@ import org.apache.avro.specific.SpecificDatumReader;
  */
 public class SDTLInputStream
 {
-    private final DatumReader<DownlinkFrame> datumReader;
+    private final DatumReader<TransportFrame> datumReader;
     private final BinaryDecoder binaryDecoder;
     
     public SDTLInputStream(InputStream is)
     {
-        datumReader = new SpecificDatumReader<>(DownlinkFrame.class);
+        datumReader = new SpecificDatumReader<>(TransportFrame.class);
         binaryDecoder = DecoderFactory.get().binaryDecoder(new InputStreamWrapper(is), null);        
     }
     
-    public DownlinkFrame read() throws IOException
+    public TransportFrame read() throws IOException
     {
-        DownlinkFrame t1 = datumReader.read(null, binaryDecoder);
+        TransportFrame t1 = datumReader.read(null, binaryDecoder);
         return t1;
     }  
     

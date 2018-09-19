@@ -14,47 +14,73 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package SDTL.StreamOperations;
-        
+package SDTL.TransportLayer;
+
 import SDTL.Protocol.TransportFrame;
 import java.nio.ByteBuffer;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Stefano Speretta <s.speretta@tudelft.nl>
- */      
-public class TestStreamOperations 
+ */
+public class TestTelemetryBuffer 
 {
     @Test
-    public void SerDesTest() throws Exception 
+    public void testBuffer() throws Exception 
     {
-        LoopbackStream ls = new LoopbackStream();
-        
-        SDTLOutputStream os = new SDTLOutputStream(ls.getOutputStream());
-        SDTLInputStream is = new SDTLInputStream(ls.getInputStream());
+        TransportBuffer tb = new TransportBuffer("./testDB");
                 
+        tb.cleanDB();
+        assertEquals(0, tb.getCount());
+        
         TransportFrame t0 = TransportFrame.newBuilder()
                 .setID(0)
                 .setPayload(ByteBuffer.wrap(new byte[10]))
                 .build();
+        
         TransportFrame t1 = TransportFrame.newBuilder()
+                .setID(1)
+                .setPayload(ByteBuffer.wrap(new byte[10]))
+                .build();
+                
+        TransportFrame t2 = TransportFrame.newBuilder()
                 .setID(2)
                 .setPayload(ByteBuffer.wrap(new byte[10]))
                 .build();
-        TransportFrame t2 = TransportFrame.newBuilder()
-                .setID(3)
-                .setPayload(ByteBuffer.wrap(new byte[10]))
-                .build();
         
-        os.write(t0);
-        os.write(t1);
-        os.write(t2);
-        os.flush();
+        tb.insertFrame(t0);
+        tb.insertFrame(t1);
+        
+        assertEquals(2, tb.getCount());
+                
+        TransportFrame r0 = tb.getFrame();
+        assertEquals(t0, r0);
+        tb.remove(t0.hashCode());
 
-        assertEquals(t0, is.read());
-        assertEquals(t1, is.read());
-        assertEquals(t2, is.read());
+        assertEquals(1, tb.getCount());
+        
+        tb.insertFrame(t2);
+        assertEquals(2, tb.getCount());
+        
+        TransportFrame r1 = tb.getFrame();
+        assertEquals(t1, r1);
+        
+        TransportFrame r21 = tb.getFrame(t2.hashCode());
+        assertEquals(t2, r21);
+        
+        tb.remove(t1.hashCode());
+        
+        TransportFrame r2 = tb.getFrame();
+        assertEquals(t2, r2);
+        
+        assertEquals(1, tb.getCount());
+        
+        tb.cleanDB();
+        assertEquals(0, tb.getCount());
+        
+        TransportFrame empty = tb.getFrame();
+        assertEquals(null, empty);
     }
 }

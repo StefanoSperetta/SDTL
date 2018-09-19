@@ -1,0 +1,8 @@
+{"namespace": "SDTL.Protocol",
+ "type": "record",
+ "name": "TransportFrame",
+ "fields": [
+     {"name": "ID", "type": "int"},
+     {"name": "payload", "type": "bytes" }
+ ]
+}
