@@ -34,19 +34,24 @@ public class TransportBuffer
 {
     private final Connection conn;
     
-    public TransportBuffer(String filePath) throws ClassNotFoundException, SQLException
+    public TransportBuffer(String filePath) throws TransportException
     {
-
-        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-        String connectionURL = "jdbc:derby:" + filePath + ";create=true";
-        Class.forName(driver);
-        conn = DriverManager.getConnection(connectionURL);  
-        
-        // ensure the table already exists, otherwise create it
-        createTable();         
+        try 
+        {
+            String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+            String connectionURL = "jdbc:derby:" + filePath + ";create=true";
+            Class.forName(driver);
+            conn = DriverManager.getConnection(connectionURL);
+            
+            // ensure the table already exists, otherwise create it
+            createTable();
+        } catch (ClassNotFoundException | SQLException ex) 
+        {
+            throw new TransportException(ex);
+        }
     }  
     
-    private void createTable() throws SQLException
+    private void createTable() throws TransportException
     {
         try
         {
@@ -65,75 +70,110 @@ public class TransportBuffer
             // if the error is not "Table already exists", re-throw the exception
             if (!ex.getSQLState().equals("X0Y32"))
             {                
-                throw ex;
+                throw new TransportException(ex);
             }
         }
     }
     
-    public int getCount() throws SQLException
+    public int getCount() throws TransportException
     {
-        Statement stmnt = conn.createStatement();
-        try (ResultSet rs = stmnt.executeQuery("SELECT COUNT(ID) FROM storage"))
+        try 
         {
-            if (rs.next())
+            Statement stmnt = conn.createStatement();
+            try (ResultSet rs = stmnt.executeQuery("SELECT COUNT(ID) FROM storage"))
             {
-                return rs.getInt(1);
+                if (rs.next())
+                {
+                    return rs.getInt(1);
+                }
             }
-        }
-        return 0;
-    }
-    
-    public void insertFrame(TransportFrame f) throws IOException, SQLException
-    {
-        int hash = f.hashCode();
-        PreparedStatement stmnt = conn.prepareStatement("INSERT INTO storage (Hash, Data) VALUES (?, ?)");
-        stmnt.setInt(1, hash);
-        stmnt.setBytes(2, f.toByteBuffer().array());
-        stmnt.execute();
-    }
-    
-    public TransportFrame getFrame() throws IOException, SQLException
-    {
-        Statement stmnt = conn.createStatement();
-        try (ResultSet rs = stmnt.executeQuery("SELECT * FROM storage ORDER BY ID ASC FETCH FIRST 1 ROW ONLY"))
+            return 0;
+        }   catch (SQLException ex) 
         {
-            while (rs.next())
-            {
-                System.out.println(rs.getInt("ID"));
-                byte[] data = rs.getBlob("Data").getBinaryStream().readAllBytes();
-                TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
-                return f;
-            }
+            throw new TransportException(ex);
         }
-        return null;        
     }
     
-    public TransportFrame getFrame(int hash) throws IOException, SQLException
+    public void insertFrame(TransportFrame f) throws TransportException
     {
-        Statement stmnt = conn.createStatement();
-        try (ResultSet rs = stmnt.executeQuery("SELECT * FROM storage WHERE Hash = " + hash + " FETCH FIRST 1 ROW ONLY"))
+        try 
         {
-            while (rs.next())
-            {
-                System.out.println(rs.getInt("ID"));
-                byte[] data = rs.getBlob("Data").getBinaryStream().readAllBytes();
-                TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
-                return f;
-            }
+            int hash = f.hashCode();
+            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO storage (Hash, Data) VALUES (?, ?)");
+            stmnt.setInt(1, hash);
+            stmnt.setBytes(2, f.toByteBuffer().array());
+            stmnt.execute();
+        } catch (SQLException | IOException ex) 
+        {
+            throw new TransportException(ex);
         }
-        return null;        
     }
     
-    public void remove(int hash) throws SQLException
+    public TransportFrame getFrame() throws TransportException
     {
-        Statement stmnt = conn.createStatement();
-        stmnt.executeUpdate("DELETE FROM storage WHERE Hash = " + hash);
-        
+        try 
+        {
+            Statement stmnt = conn.createStatement();
+            try (ResultSet rs = stmnt.executeQuery("SELECT * FROM storage ORDER BY ID ASC FETCH FIRST 1 ROW ONLY"))
+            {
+                while (rs.next())
+                {
+                    System.out.println(rs.getInt("ID"));
+                    byte[] data = rs.getBlob("Data").getBinaryStream().readAllBytes();
+                    TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
+                    return f;
+                }
+            }
+            return null;
+        } catch (SQLException | IOException ex) 
+        {
+            throw new TransportException(ex);
+        }
     }
     
-    public void cleanDB() throws SQLException
+    public TransportFrame getFrame(int hash) throws TransportException
     {
-        Statement stmnt = conn.createStatement();
-        stmnt.executeUpdate("DELETE FROM storage");        
+        try 
+        {
+            Statement stmnt = conn.createStatement();
+            try (ResultSet rs = stmnt.executeQuery("SELECT * FROM storage WHERE Hash = " + hash + " FETCH FIRST 1 ROW ONLY"))
+            {
+                while (rs.next())
+                {
+                    System.out.println(rs.getInt("ID"));
+                    byte[] data = rs.getBlob("Data").getBinaryStream().readAllBytes();
+                    TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
+                    return f;
+                }
+            }
+            return null;
+        } catch (SQLException | IOException ex) 
+        {
+            throw new TransportException(ex);
+        }
+    }
+    
+    public void remove(int hash) throws TransportException
+    {
+        try 
+        {
+            Statement stmnt = conn.createStatement();
+            stmnt.executeUpdate("DELETE FROM storage WHERE Hash = " + hash);
+        } catch (SQLException ex) 
+        {
+            throw new TransportException(ex);
+        }
+    }
+    
+    public void cleanDB() throws TransportException
+    {
+        try 
+        {
+            Statement stmnt = conn.createStatement();        
+            stmnt.executeUpdate("DELETE FROM storage");
+        } catch (SQLException ex) 
+        {
+            throw new TransportException(ex);
+        }
     }
 }
