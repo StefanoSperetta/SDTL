@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
  *
  * @author Stefano Speretta <s.speretta@tudelft.nl>
  */
-public class TestTelemetryBuffer 
+public class TestTransportBuffer 
 {
     @Test
     public void testBuffer() throws Exception 
