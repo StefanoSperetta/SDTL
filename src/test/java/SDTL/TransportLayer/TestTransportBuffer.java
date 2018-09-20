@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class TestTransportBuffer 
 {
     @Test
-    public void testBuffer() throws Exception 
+    public void testBuffer() throws TransportException 
     {
         TransportBuffer tb = new TransportBuffer("./testDB");
                 
