@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class AckFrame extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4442530498484351253L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AckFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"ack\",\"type\":\"boolean\"},{\"name\":\"hash\",\"type\":\"int\"}]}");
+  private static final long serialVersionUID = 2597451114033863811L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"AckFrame\",\"namespace\":\"SDTL.Protocol\",\"fields\":[{\"name\":\"timestamp\",\"type\":[\"null\",\"long\"],\"default\":\"null\"},{\"name\":\"ack\",\"type\":\"boolean\"},{\"name\":\"hash\",\"type\":\"int\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -51,7 +51,7 @@ public class AckFrame extends org.apache.avro.specific.SpecificRecordBase implem
     return DECODER.decode(b);
   }
 
-  @Deprecated public long timestamp;
+  @Deprecated public java.lang.Long timestamp;
   @Deprecated public boolean ack;
   @Deprecated public int hash;
 
@@ -176,7 +176,7 @@ public class AckFrame extends org.apache.avro.specific.SpecificRecordBase implem
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<AckFrame>
     implements org.apache.avro.data.RecordBuilder<AckFrame> {
 
-    private long timestamp;
+    private java.lang.Long timestamp;
     private boolean ack;
     private int hash;
 
@@ -238,7 +238,7 @@ public class AckFrame extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'timestamp'.
       * @return This builder.
       */
-    public SDTL.Protocol.AckFrame.Builder setTimestamp(long value) {
+    public SDTL.Protocol.AckFrame.Builder setTimestamp(java.lang.Long value) {
       validate(fields()[0], value);
       this.timestamp = value;
       fieldSetFlags()[0] = true;
@@ -259,6 +259,7 @@ public class AckFrame extends org.apache.avro.specific.SpecificRecordBase implem
       * @return This builder.
       */
     public SDTL.Protocol.AckFrame.Builder clearTimestamp() {
+      timestamp = null;
       fieldSetFlags()[0] = false;
       return this;
     }
