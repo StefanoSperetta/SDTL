@@ -17,6 +17,7 @@
 package SDTL.StreamOperations;
 
 import SDTL.Protocol.TransportFrame;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.avro.io.BinaryDecoder;
@@ -32,17 +33,31 @@ public class SDTLInputStream
 {
     private final DatumReader<TransportFrame> datumReader;
     private final BinaryDecoder binaryDecoder;
+    private final InputStream is;
     
     public SDTLInputStream(InputStream is)
     {
         datumReader = new SpecificDatumReader<>(TransportFrame.class);
-        binaryDecoder = DecoderFactory.get().binaryDecoder(new InputStreamWrapper(is), null);        
+        binaryDecoder = DecoderFactory.get().binaryDecoder(new InputStreamWrapper(is), null);
+        this.is = is;
+    }
+    
+    public void close() throws IOException
+    {
+        is.close();
     }
     
     public TransportFrame read() throws IOException
     {
-        TransportFrame t1 = datumReader.read(null, binaryDecoder);
-        return t1;
+        try
+        {
+            TransportFrame t1 = datumReader.read(null, binaryDecoder);
+            return t1;
+        } catch (EOFException ex)
+        {
+            // the stream has been closed, just return null
+            return null;
+        }
     }  
     
     private class InputStreamWrapper extends InputStream
