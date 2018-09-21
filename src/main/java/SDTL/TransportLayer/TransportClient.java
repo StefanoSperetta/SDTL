@@ -20,7 +20,6 @@ import SDTL.Protocol.AckFrame;
 import SDTL.Protocol.DownlinkFrame;
 import SDTL.Protocol.TransportFrame;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
