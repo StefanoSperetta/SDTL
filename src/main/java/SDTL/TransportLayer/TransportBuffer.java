@@ -33,6 +33,7 @@ import java.sql.Statement;
 public class TransportBuffer 
 {
     private final Connection conn;
+    private int lastID = -1;
     
     public TransportBuffer(String filePath) throws TransportException
     {
@@ -109,24 +110,30 @@ public class TransportBuffer
         }
     }
     
-    public TransportFrame getFrame() throws TransportException
+    public TransportFrame getNextFrame() throws TransportException
     {
         try 
         {
-            Statement stmnt = conn.createStatement();
-            try (ResultSet rs = stmnt.executeQuery("SELECT * FROM storage ORDER BY ID ASC FETCH FIRST 1 ROW ONLY"))
-            {
-                while (rs.next())
-                {
-                    System.out.println(rs.getInt("ID"));
-                    byte[] data = rs.getBlob("Data").getBinaryStream().readAllBytes();
-                    TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
-                    return f;
-                }
+            Statement stmt = conn.createStatement();
+            ResultSet nf = stmt.executeQuery("SELECT * FROM storage WHERE ID > " + lastID + " ORDER BY ID ASC FETCH FIRST 1 ROW ONLY");
+            
+            if (nf.next())
+            {      
+                lastID = nf.getInt("ID");
+                byte[] data = nf.getBlob("Data").getBinaryStream().readAllBytes();
+                TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
+                return f;
             }
-            return null;
+            else
+            {
+                // next time, restart enumerating from the first frame
+                lastID = -1;
+                return null;
+            }
         } catch (SQLException | IOException ex) 
         {
+            // next time, restart enumerating from the first frame
+            lastID = -1;
             throw new TransportException(ex);
         }
     }
@@ -140,7 +147,6 @@ public class TransportBuffer
             {
                 while (rs.next())
                 {
-                    System.out.println(rs.getInt("ID"));
                     byte[] data = rs.getBlob("Data").getBinaryStream().readAllBytes();
                     TransportFrame f = TransportFrame.fromByteBuffer(ByteBuffer.wrap(data));
                     return f;

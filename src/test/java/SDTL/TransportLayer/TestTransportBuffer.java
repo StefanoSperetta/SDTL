@@ -55,7 +55,7 @@ public class TestTransportBuffer
         
         assertEquals(2, tb.getCount());
                 
-        TransportFrame r0 = tb.getFrame();
+        TransportFrame r0 = tb.getNextFrame();
         assertEquals(t0, r0);
         tb.remove(t0.hashCode());
 
@@ -64,7 +64,7 @@ public class TestTransportBuffer
         tb.insertFrame(t2);
         assertEquals(2, tb.getCount());
         
-        TransportFrame r1 = tb.getFrame();
+        TransportFrame r1 = tb.getNextFrame();
         assertEquals(t1, r1);
         
         TransportFrame r21 = tb.getFrame(t2.hashCode());
@@ -72,7 +72,7 @@ public class TestTransportBuffer
         
         tb.remove(t1.hashCode());
         
-        TransportFrame r2 = tb.getFrame();
+        TransportFrame r2 = tb.getNextFrame();
         assertEquals(t2, r2);
         
         assertEquals(1, tb.getCount());
@@ -80,7 +80,7 @@ public class TestTransportBuffer
         tb.cleanDB();
         assertEquals(0, tb.getCount());
         
-        TransportFrame empty = tb.getFrame();
+        TransportFrame empty = tb.getNextFrame();
         assertEquals(null, empty);
     }
 }
