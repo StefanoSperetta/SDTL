@@ -2,7 +2,7 @@
  "type": "record",
  "name": "AckFrame",
  "fields": [
-     {"name": "timestamp", "type": "long"},
+     {"name": "timestamp", "type": [ "null", "long" ], "default": "null"},
      {"name": "ack", "type": "boolean"},
      {"name": "hash", "type": "int"}
  ]
