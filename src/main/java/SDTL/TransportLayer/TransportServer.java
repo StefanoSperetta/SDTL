@@ -55,6 +55,7 @@ public class TransportServer extends Thread
     public void run() 
     {
         running = true;
+
         try 
         {
             while (running)
@@ -66,7 +67,6 @@ public class TransportServer extends Thread
                     {
                         case TransportID.SUBMITDOWNLINKFRAME:
                             DownlinkFrame a = DownlinkFrame.fromByteBuffer(tf.getPayload());                            
-                            System.out.println("Received " +a);
                             
                             sc.receivedDownlinkFrame(a);
                             
@@ -120,7 +120,7 @@ public class TransportServer extends Thread
             {
                 // ignore this exception
             }
-        }        
+        }
         running = false;
     }
 }

@@ -19,7 +19,10 @@ package SDTL.TransportLayer;
 import SDTL.Protocol.AckFrame;
 import SDTL.Protocol.DownlinkFrame;
 import SDTL.Protocol.TransportFrame;
+import SDTL.StreamOperations.SDTLInputStream;
+import SDTL.StreamOperations.SDTLOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,16 +36,16 @@ import java.util.logging.Logger;
  *
  * @author Stefano Speretta <s.speretta@tudelft.nl>
  */
-public class TransportClient implements ReceiveHandler
+public class TransportClient
 {
     private final TransportBuffer tb;
-    private final TransportConnector tc;
+    private final SDTLClientConnector tc;
     private final ScheduledExecutorService scheduler;
     private final int pollrate;
     private static boolean periodicTaskRunning = false;
     private final List<Integer> ackList = new LinkedList<>();
     
-    public TransportClient(String db, TransportConnector connector, int updateRate) throws TransportException
+    public TransportClient(String db, SDTLClientConnector connector, int updateRate) throws TransportException
     {
         pollrate = updateRate;
         tb = new TransportBuffer(db);
@@ -53,7 +56,6 @@ public class TransportClient implements ReceiveHandler
     
     public void start()
     {
-        tc.registerReceiveHandler(this);
         scheduler.scheduleAtFixedRate(new Runnable()
         {
             @Override
@@ -104,7 +106,7 @@ public class TransportClient implements ReceiveHandler
         }
     }
 
-    private void connect()
+    private void connect() throws IOException
     {
         tc.connect();
         
@@ -124,23 +126,33 @@ public class TransportClient implements ReceiveHandler
             System.out.println("TransportClient thread " + new Date());
 
             // if not connected, try to connect
-            if (!tc.connected())
+            if (!tc.connected() && (tb.getCount() != 0))
             {
+                System.out.println("-> " + tc.connected() + " " + tb.getCount());
                 connect();
             }
 
             // if connect was succesfull, transfer the frames
             if (tc.connected())
             {
+                System.out.println("Client connected...");
+                MessageReceiver mr = new MessageReceiver(tc.getInputStream());
+                mr.start();
+                SDTLOutputStream os = new SDTLOutputStream(tc.getOutputStream());
+                
+                //Thread.sleep(100);
                 TransportFrame f = tb.getNextFrame();
                 while ((f != null) && tc.connected())
                 {
-                    tc.send(f);
+                    System.out.println("Writing... " + f);
+                    os.write(f);
+                    os.flush();
                     f = tb.getNextFrame();
                 }
                 
                 // wait for the acknowledges to come
                 int countMax = pollrate * 1000 / 100;
+                System.out.println("sleeping loop " + countMax + " " + new Date());
                 for (int i = 0; i < countMax; i++ )
                 {
                     if (ackList.isEmpty())
@@ -155,51 +167,76 @@ public class TransportClient implements ReceiveHandler
                         // ignore exception
                     }
                 }
-                System.out.println("remaining " + ackList.size());
+                System.out.println("remaining " + ackList.size() + " " + new Date());
                 // if we did not receive all the ACKs, drop the connection
                 if (!ackList.isEmpty())
                 {
                     tc.disconnect();
                 }
             }
-        } catch (TransportException ex) 
-        {
-            Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        periodicTaskRunning = false;
-    }
-    
-    @Override
-    public void messageReceived(TransportFrame tf)
-    {
-        try 
-        {
-            switch(tf.getID())
-            {
-                case TransportID.ACK:
-                    AckFrame a = AckFrame.fromByteBuffer(tf.getPayload());
-                    System.out.println("Removing " + a.getHash());
-                    tb.remove(a.getHash());
-                    System.out.println("Found " + ackList.remove(a.getHash()));
-                    break;
-                
-                default:
-                    // ACK the other frames that I do not support
-                    AckFrame ack = AckFrame.newBuilder()
-                            .setAck(false)
-                            .setHash(tf.hashCode())
-                            .setTimestamp(new Date().getTime())
-                            .build();
-                    TransportFrame t = TransportFrame.newBuilder()
-                            .setID(TransportID.ACK)
-                            .setPayload(ack.toByteBuffer())
-                            .build();
-                    send(t);
-                    break;
-            }
         } catch (TransportException | IOException ex) 
         {
+            try 
+            {
+                tc.disconnect();
+            } catch (IOException ex1) 
+            {
+                // Ignore errors on disconnect, connection has probably already been terminated
+            }
             Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        periodicTaskRunning = false;
+    }
+            
+    private class MessageReceiver extends Thread
+    {
+        private final SDTLInputStream input;
+        
+        public MessageReceiver(InputStream is)
+        {
+            input = new SDTLInputStream(is);
+        }
+        
+        @Override
+        public void run()
+        {
+            TransportFrame tf = null;
+        
+            try 
+            {
+                while (true)
+                {                    
+                    tf = input.read();
+                    
+                    System.out.println("Receiver " + tf);
+                    switch(tf.getID())
+                    {
+                        case TransportID.ACK:
+                            AckFrame a = AckFrame.fromByteBuffer(tf.getPayload());
+                            System.out.println("Removing " + a.getHash());
+                            tb.remove(a.getHash());
+                            System.out.println("Found " + ackList.remove(a.getHash()));
+                            break;
+
+                        default:
+                            // ACK the other frames that I do not support
+                            AckFrame ack = AckFrame.newBuilder()
+                                    .setAck(false)
+                                    .setHash(tf.hashCode())
+                                    .setTimestamp(new Date().getTime())
+                                    .build();
+                            TransportFrame t = TransportFrame.newBuilder()
+                                    .setID(TransportID.ACK)
+                                    .setPayload(ack.toByteBuffer())
+                                    .build();
+                            send(t);
+                            break;
+                    }
+                }
+            } catch (TransportException | IOException ex) 
+            {
+                Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

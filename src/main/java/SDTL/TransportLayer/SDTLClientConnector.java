@@ -16,22 +16,24 @@
  */
 package SDTL.TransportLayer;
 
-import SDTL.Protocol.TransportFrame;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
  * @author Stefano Speretta <s.speretta@tudelft.nl>
  */
-public abstract class TransportConnector 
+public interface SDTLClientConnector 
 {
-    public abstract void registerReceiveHandler(ReceiveHandler rx);
+    public abstract void connect() throws IOException;
     
-    public abstract void send(TransportFrame tf);       
-            
-    public abstract void connect();
-    
-    public abstract void disconnect();
+    public abstract void disconnect() throws IOException;
     
     public abstract boolean connected();
-
+    
+    public abstract InputStream getInputStream() throws IOException;
+    
+    public abstract OutputStream getOutputStream() throws IOException;
+    
 }
