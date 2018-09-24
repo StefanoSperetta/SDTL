@@ -18,7 +18,6 @@ package SDTL.StreamOperations;
 
 import SDTL.Protocol.TransportFrame;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;

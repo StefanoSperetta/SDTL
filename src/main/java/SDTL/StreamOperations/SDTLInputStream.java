@@ -49,14 +49,24 @@ public class SDTLInputStream
     
     public TransportFrame read() throws IOException
     {
-        try
+        while (true)
         {
-            TransportFrame t1 = datumReader.read(null, binaryDecoder);
-            return t1;
-        } catch (EOFException ex)
-        {
-            // the stream has been closed, just return null
-            return null;
+            try
+            {
+                TransportFrame t1 = datumReader.read(null, binaryDecoder);
+                return t1;
+            } catch (EOFException ex)
+            {
+                // there is no byte available, simply retry...
+                // the function is supposed to block till a frame is received
+                try 
+                {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex1) 
+                {
+                    // ignore this exception
+                }
+            }
         }
     }  
     
