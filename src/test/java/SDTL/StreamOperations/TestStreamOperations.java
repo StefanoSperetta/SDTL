@@ -21,8 +21,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -59,11 +62,25 @@ public class TestStreamOperations
         os.write(t2);
         os.flush();
 
+        // check all frames have been received
         assertEquals(t0, is.read());
         assertEquals(t1, is.read());
         assertEquals(t2, is.read());
-    }
-    
+        
+        // test the blocking read using an helper class
+        DelayedRead s = new DelayedRead(is);        
+        s.start();
+        
+        // wait a little to see if the read is really blocking
+        Thread.sleep(1000);
+        
+        // check that the read is actually blocking
+        assertTrue(s.isAlive());
+        
+        // close the stream and make sure it thrown an IOException
+        is.close();        
+    }    
+
     @Test
     public void SerializeOnSocketTest() throws Exception 
     {
@@ -87,23 +104,49 @@ public class TestStreamOperations
         Socket skt = new Socket("localhost", 56000);
         SDTLInputStream is = new SDTLInputStream(skt.getInputStream());
         
+        // test all frames have been received (and in the right order)
         for (TransportFrame input1 : input) 
         {
             assertEquals(input1, is.read());
         }
         
+        // test the blocking read using an helper class
+        DelayedRead s = new DelayedRead(is);        
+        s.start();
+        
+        // wait a little to see if the read is really blocking
+        Thread.sleep(1000);
+        
+        // check that the read is actually blocking
+        assertTrue(s.isAlive());
+        
+        // close the stream and make sure it thrown an IOException
         is.close();
-                
-        try
-        {
-            is.read();
-            Assert.fail( "An IOException is expected to be thrown" );
-        } catch (IOException ex)
-        {
-            // correct behaviour
-        }
     }
     
+    private class DelayedRead extends Thread
+    {
+        private final SDTLInputStream stream;
+    
+        public DelayedRead(SDTLInputStream is)
+        {
+            stream = is;
+        }
+        
+        @Override
+        public void run() 
+        {
+            try 
+            {
+                stream.read();
+                Assert.fail("An IOException should have been thrown.");
+            } catch (IOException ex) 
+            {
+                // OK, this exception is expected to be thrown
+            }
+        }
+    }
+        
     private class SocketServer extends Thread 
     {
         private ServerSocket server;

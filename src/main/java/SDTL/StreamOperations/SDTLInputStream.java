@@ -34,6 +34,7 @@ public class SDTLInputStream
     private final DatumReader<TransportFrame> datumReader;
     private final BinaryDecoder binaryDecoder;
     private final InputStream is;
+    private boolean open = true;
     
     public SDTLInputStream(InputStream is)
     {
@@ -44,12 +45,13 @@ public class SDTLInputStream
     
     public void close() throws IOException
     {
+        open = false;
         is.close();
     }
     
     public TransportFrame read() throws IOException
     {
-        while (true)
+        while (open)
         {
             try
             {
@@ -68,6 +70,7 @@ public class SDTLInputStream
                 }
             }
         }
+        throw new IOException("Connection closed.");
     }  
     
     private class InputStreamWrapper extends InputStream
