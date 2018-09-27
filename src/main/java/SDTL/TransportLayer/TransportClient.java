@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
  *
  * @author Stefano Speretta <s.speretta@tudelft.nl>
  */
-public class TransportClient
+public class TransportClient extends Thread
 {
     private final TransportBuffer tb;
     private final SDTLClientConnector tc;
@@ -44,6 +45,7 @@ public class TransportClient
     private final int pollrate;
     private static boolean periodicTaskRunning = false;
     private final List<Integer> ackList = new LinkedList<>();
+    private final Semaphore semaphore = new Semaphore(0);
     
     public TransportClient(String db, SDTLClientConnector connector, int updateRate) throws TransportException
     {
@@ -54,14 +56,16 @@ public class TransportClient
         scheduler = Executors.newScheduledThreadPool(1);
     }
     
+    @Override
     public void start()
     {
+        super.start();
         scheduler.scheduleAtFixedRate(new Runnable()
         {
             @Override
             public void run() 
             {
-                periodicTask();
+                semaphore.release();
             }
         }, 0, pollrate, TimeUnit.SECONDS);
     }
@@ -79,17 +83,9 @@ public class TransportClient
     private void send(TransportFrame frame) throws TransportException
     {        
         tb.insertFrame(frame);
-
-        // start the sender, in case it is not running
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run() 
-            {
-                periodicTask();
-            }                
-        }).start();
+        semaphore.release();
     }
+    
     public void submitDownlinkFrame(DownlinkFrame f) throws TransportException
     {
         try 
@@ -113,79 +109,76 @@ public class TransportClient
         // send the schema
     }
     
-    public void periodicTask() 
-    {
-        if (periodicTaskRunning)
-        {
-            return;
-        }
-        
+    @Override
+    public void run()
+    {        
         periodicTaskRunning = true;
-        try 
-        {
-            System.out.println("TransportClient thread " + new Date());
-
-            // if not connected, try to connect
-            if (!tc.connected() && (tb.getCount() != 0))
-            {
-                System.out.println("-> " + tc.connected() + " " + tb.getCount());
-                connect();
-            }
-
-            // if connect was succesfull, transfer the frames
-            if (tc.connected())
-            {
-                System.out.println("Client connected...");
-                MessageReceiver mr = new MessageReceiver(tc.getInputStream());
-                mr.start();
-                SDTLOutputStream os = new SDTLOutputStream(tc.getOutputStream());
-                
-                //Thread.sleep(100);
-                TransportFrame f = tb.getNextFrame();
-                while ((f != null) && tc.connected())
-                {
-                    System.out.println("Writing... " + f);
-                    os.write(f);
-                    os.flush();
-                    f = tb.getNextFrame();
-                }
-                
-                // wait for the acknowledges to come
-                int countMax = pollrate * 1000 / 100;
-                System.out.println("sleeping loop " + countMax + " " + new Date());
-                for (int i = 0; i < countMax; i++ )
-                {
-                    if (ackList.isEmpty())
-                    {
-                        break;
-                    }
-                    try
-                    {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) 
-                    {
-                        // ignore exception
-                    }
-                }
-                System.out.println("remaining " + ackList.size() + " " + new Date());
-                // if we did not receive all the ACKs, drop the connection
-                if (!ackList.isEmpty())
-                {
-                    tc.disconnect();
-                }
-            }
-        } catch (TransportException | IOException ex) 
-        {
+        while(periodicTaskRunning)
+        {            
             try 
             {
-                tc.disconnect();
-            } catch (IOException ex1) 
+                semaphore.acquire();
+                semaphore.drainPermits();
+
+                // if not connected, try to connect
+                if (!tc.connected() && (tb.getCount() != 0))
+                {
+                    connect();
+                }
+
+                // if connect was succesfull, transfer the frames
+                if (tc.connected())
+                {
+                    MessageReceiver mr = new MessageReceiver(tc.getInputStream());
+                    mr.start();
+                    SDTLOutputStream os = new SDTLOutputStream(tc.getOutputStream());
+
+                    TransportFrame f = tb.getNextFrame();
+                    while ((f != null) && tc.connected())
+                    {
+                        os.write(f);
+                        os.flush();
+                        f = tb.getNextFrame();
+                    }
+
+                    // wait for the acknowledges to come
+                    int countMax = pollrate * 1000 / 100;
+                    for (int i = 0; i < countMax; i++ )
+                    {
+                        if (ackList.isEmpty())
+                        {
+                            break;
+                        }
+                        try
+                        {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex) 
+                        {
+                            // ignore exception
+                        }
+                    }
+
+                    // if we did not receive all the ACKs, drop the connection
+                    if (!ackList.isEmpty())
+                    {
+                        tc.disconnect();
+                    }
+                }
+            } catch (TransportException | IOException ex) 
             {
-                // Ignore errors on disconnect, connection has probably already been terminated
+                try 
+                {
+                    tc.disconnect();
+                } catch (IOException ex1) 
+                {
+                    // Ignore errors on disconnect, connection has probably already been terminated
+                }
+                Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
+            }   catch (InterruptedException ex) 
+            {
+                Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        periodicTaskRunning = false;
     }
             
     private class MessageReceiver extends Thread
@@ -207,15 +200,13 @@ public class TransportClient
                 while (true)
                 {                    
                     tf = input.read();
-                    
-                    System.out.println("Receiver " + tf);
+
                     switch(tf.getID())
                     {
                         case TransportID.ACK:
                             AckFrame a = AckFrame.fromByteBuffer(tf.getPayload());
-                            System.out.println("Removing " + a.getHash());
+                            ackList.remove(a.getHash());                            
                             tb.remove(a.getHash());
-                            System.out.println("Found " + ackList.remove(a.getHash()));
                             break;
 
                         default:
