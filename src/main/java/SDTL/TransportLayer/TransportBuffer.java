@@ -159,12 +159,12 @@ public class TransportBuffer
         }
     }
     
-    public void remove(int hash) throws TransportException
+    public boolean remove(int hash) throws TransportException
     {
         try 
         {
             Statement stmnt = conn.createStatement();
-            stmnt.executeUpdate("DELETE FROM storage WHERE Hash = " + hash);
+            return stmnt.executeUpdate("DELETE FROM storage WHERE Hash = " + hash) == 1;
         } catch (SQLException ex) 
         {
             throw new TransportException(ex);

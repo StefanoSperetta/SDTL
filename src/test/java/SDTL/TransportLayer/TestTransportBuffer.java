@@ -57,7 +57,7 @@ public class TestTransportBuffer
                 
         TransportFrame r0 = tb.getNextFrame();
         assertEquals(t0, r0);
-        tb.remove(t0.hashCode());
+        assertEquals(true, tb.remove(t0.hashCode()));
 
         assertEquals(1, tb.getCount());
         
@@ -70,7 +70,10 @@ public class TestTransportBuffer
         TransportFrame r21 = tb.getFrame(t2.hashCode());
         assertEquals(t2, r21);
         
-        tb.remove(t1.hashCode());
+        // provide a wrong hash and check if the remove fails
+        assertEquals(false, tb.remove(t1.hashCode()+1));
+        
+        assertEquals(true, tb.remove(t1.hashCode()));
         
         TransportFrame r2 = tb.getNextFrame();
         assertEquals(t2, r2);
