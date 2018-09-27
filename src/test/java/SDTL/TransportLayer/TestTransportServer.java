@@ -34,7 +34,7 @@ import org.junit.Test;
  * @author Stefano Speretta <s.speretta@tudelft.nl>
  */
 public class TestTransportServer 
-{
+{    
     @Test
     public void testServer() throws TransportException, InterruptedException, IOException 
     {
@@ -96,12 +96,12 @@ public class TestTransportServer
         Thread.sleep(1000);
 
         SDTLInputStream ns = new SDTLInputStream(new ByteArrayInputStream(os2.toByteArray()));
-        TransportFrame t = ns.read();
-        while(t != null)
+        
+        for (int i = 0; i < 4; i++)
         {
+            TransportFrame t = ns.read();
             AckFrame af = AckFrame.fromByteBuffer(t.getPayload());
             System.out.println(af);
-            t = ns.read();
         }
     }
     
