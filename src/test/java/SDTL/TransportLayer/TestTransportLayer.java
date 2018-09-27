@@ -69,9 +69,11 @@ public class TestTransportLayer
     private class SocketServerController extends Thread 
     {
         private ServerSocket server = null;
+        private boolean open;
         
         public void close()
         {
+            open = false;
             if (server != null)
             {
                 try 
@@ -99,10 +101,11 @@ public class TestTransportLayer
         @Override
         public void run() 
         {
+            open = true;
             try 
             {
                 server = new ServerSocket(0);
-                while (true) 
+                while (open) 
                 {
                     /**
                      * create a new {@link SocketServer} object for each connection
@@ -112,7 +115,10 @@ public class TestTransportLayer
                 }
             } catch (IOException ex) 
             {
-                ex.printStackTrace();
+                if (open)
+                {
+                    ex.printStackTrace();
+                }
             } finally 
             {
                 try 
@@ -121,7 +127,10 @@ public class TestTransportLayer
                         server.close();
                 } catch (IOException ex) 
                 {
-                    ex.printStackTrace();
+                    if (open)
+                    {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }
