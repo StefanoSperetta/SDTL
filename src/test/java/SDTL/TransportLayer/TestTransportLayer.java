@@ -36,6 +36,8 @@ public class TestTransportLayer
     @Test
     public void testTransportLayer() throws InterruptedException, TransportException
     {
+        System.out.println("-> " + Thread.currentThread().getStackTrace()[1].getMethodName());
+        
         SocketServerController sc = new SocketServerController();
         sc.start(); 
         

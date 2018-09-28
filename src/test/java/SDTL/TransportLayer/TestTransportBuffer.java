@@ -30,6 +30,8 @@ public class TestTransportBuffer
     @Test
     public void testBuffer() throws TransportException 
     {
+        System.out.println("-> " + Thread.currentThread().getStackTrace()[1].getMethodName());
+        
         TransportBuffer tb = new TransportBuffer("./testDB");
                 
         tb.cleanDB();

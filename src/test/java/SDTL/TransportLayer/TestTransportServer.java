@@ -38,6 +38,8 @@ public class TestTransportServer
     @Test
     public void testServer() throws TransportException, InterruptedException, IOException 
     {
+        System.out.println("-> " + Thread.currentThread().getStackTrace()[1].getMethodName());
+        
         DownlinkFrame f0 = DownlinkFrame.newBuilder()
                 .setReceptionTime(new Date().getTime())
                 .setClientSubmissionTime(new Date().getTime())

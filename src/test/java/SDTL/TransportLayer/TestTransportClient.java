@@ -35,6 +35,8 @@ public class TestTransportClient
     @Test
     public void testClient() throws TransportException, InterruptedException 
     {
+        System.out.println("-> " + Thread.currentThread().getStackTrace()[1].getMethodName());
+        
         DebugConnector dc = new DebugConnector();
         dc.disable();
         
