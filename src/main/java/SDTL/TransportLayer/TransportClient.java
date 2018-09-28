@@ -44,7 +44,7 @@ public class TransportClient extends Thread
     private final ScheduledExecutorService scheduler;
     private final int pollrate;
     private static boolean periodicTaskRunning = false;
-    private final List<Integer> ackList = new LinkedList<>();
+    private final ThreadSafeList ackList = new ThreadSafeList();
     private final Semaphore semaphore = new Semaphore(0);
     
     public TransportClient(String db, SDTLClientConnector connector, int updateRate) throws TransportException
@@ -228,6 +228,26 @@ public class TransportClient extends Thread
             {
                 Logger.getLogger(TransportClient.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+    
+    private class ThreadSafeList
+    {
+        private final List<Integer> list = new LinkedList<>();
+        
+        public synchronized boolean add(int n)
+        {
+            return list.add(n);
+        }
+        
+        public synchronized boolean isEmpty()
+        {
+            return list.isEmpty();
+        }
+        
+        public synchronized boolean remove(int n)
+        {
+            return list.remove((Integer)n);
         }
     }
 }
